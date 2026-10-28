@@ -20,3 +20,21 @@ export function authenticate(req: Request, res: Response, next: NextFunction): v
     next();
   })(req, res, next);
 }
+
+/**
+ * Autenticación opcional: establece `req.user` si hay un token válido, pero
+ * continúa sin error si no lo hay. Útil para recursos accesibles a invitados
+ * (p. ej. carrito de invitado) y autenticados.
+ */
+export function authenticateOptional(req: Request, res: Response, next: NextFunction): void {
+  passport.authenticate('jwt', { session: false }, (err: unknown, user: Express.User | false) => {
+    if (err) {
+      next(err);
+      return;
+    }
+    if (user) {
+      req.user = user;
+    }
+    next();
+  })(req, res, next);
+}

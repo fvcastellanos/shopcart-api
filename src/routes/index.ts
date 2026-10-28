@@ -1,14 +1,30 @@
 import { Router } from 'express';
-import { healthRouter } from './health.routes.js';
+import { actuatorRouter } from './actuator.routes.js';
 import { authRouter } from './auth.routes.js';
 import { categoriaRouter } from './categoria.routes.js';
 import { productoRouter } from './producto.routes.js';
 import { varianteRouter } from './variante.routes.js';
+import { inventarioRouter } from './inventario.routes.js';
+import { carritoRouter } from './carrito.routes.js';
+import { cuponRouter } from './cupon.routes.js';
+import { direccionRouter } from './direccion.routes.js';
+import { reservaInventarioRouter } from './reservaInventario.routes.js';
+import { pedidoRouter } from './pedido.routes.js';
+import { dashboardRouter } from './dashboard.routes.js';
+import { bitacoraRouter } from './bitacora.routes.js';
 
 export const apiRouter = Router();
 
-apiRouter.use('/health', healthRouter);
+apiRouter.use('/actuator', actuatorRouter);
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/categorias', categoriaRouter);
 apiRouter.use('/productos', productoRouter);
 apiRouter.use('/variantes', varianteRouter);
+apiRouter.use('/inventario', inventarioRouter);
+apiRouter.use('/carrito', carritoRouter);
+apiRouter.use('/cupones', cuponRouter);
+apiRouter.use('/direcciones', direccionRouter);
+apiRouter.use('/reservas', reservaInventarioRouter);
+apiRouter.use('/pedidos', pedidoRouter);
+apiRouter.use('/dashboard', dashboardRouter);
+apiRouter.use('/bitacora', bitacoraRouter);

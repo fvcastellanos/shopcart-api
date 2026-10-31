@@ -84,6 +84,16 @@ curl http://localhost:4000/v1/actuator/info
 # {"nombre":"shopcart-api","version":"0.1.0","commit":"9f4d2a6","tag":"none","branch":"main"}
 ```
 
+Documentación interactiva (OpenAPI / Swagger):
+
+```bash
+# UI de Swagger
+open http://localhost:4000/api-docs
+
+# Especificación OpenAPI (JSON)
+curl http://localhost:4000/api-docs.json
+```
+
 ---
 
 ## Estructura (arquitectura por capas)
@@ -185,7 +195,7 @@ Todas las rutas están prefijadas con `/v1`.
 | Recurso | Métodos | Acceso |
 |---|---|---|
 | `/actuator/health`, `/actuator/info` | GET | público |
-| `/auth` | `POST /register`, `POST /login`, `POST /refresh` | público |
+| `/auth` | `POST /register`, `POST /login`, `POST /refresh`, `POST /logout` | público |
 | `/categorias` | GET (lista), POST, `PUT /:id`, `DELETE /:id` | lectura pública · escritura Admin |
 | `/productos` | GET (búsqueda/filtros), `GET /:id`, POST, `PUT /:id`, `DELETE /:id` | lectura pública · escritura Admin |
 | `/variantes` | POST, `PUT /:id`, `DELETE /:id` | Admin |
@@ -223,7 +233,9 @@ Cupones de ejemplo: `BIENVENIDA10` (10% de descuento) y `DESCUENTO50`
 - **Arquitectura por capas y por recurso**: cada entidad tiene sus archivos en
   `schemas`, `repositories`, `services`, `controllers` y `routes`.
 - **Passport + JWT** para autenticación (access token de corta duración y
-  refresh token con rotación, almacenado como hash en `TokenSesion`).
+  refresh token con rotación, almacenado como hash en `TokenSesion`). El refresh
+  token viaja en una cookie `httpOnly` (protección XSS) y el access token en el
+  cuerpo JSON de la respuesta.
 - **Checkout atómico e idempotente**: `SP_Pedidos_CrearPedido` usa `XACT_ABORT`
   + transacción, `ClaveIdempotencia` UNIQUE y decremento de existencia atómico
   (`UPDATE ... WHERE Existencia >= Cantidad`) para evitar sobreventa.

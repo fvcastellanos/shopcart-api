@@ -46,9 +46,9 @@ export class NotFoundError extends AppError {
   }
 }
 
-export class ConflictError extends AppError {
-  constructor(message: string, code = 'CONFLICT') {
-    super(409, code, message);
-    this.name = 'ConflictError';
+export class UnprocessableEntityError extends AppError {
+  constructor(message: string, code = 'UNPROCESSABLE_ENTITY') {
+    super(422, code, message);
+    this.name = 'UnprocessableEntityError';
   }
 }

@@ -2,15 +2,17 @@ import { createHash } from 'node:crypto';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js';
-import { ConflictError, UnauthorizedError } from '../lib/errors.js';
+import { UnprocessableEntityError, UnauthorizedError } from '../lib/errors.js';
 import * as usuarioRepository from '../repositories/usuario.repository.js';
 import * as tokenSesionRepository from '../repositories/tokenSesion.repository.js';
 import type { AuthUser } from '../types/auth.js';
 import type { LoginInput, RegisterInput } from '../schemas/auth.schema.js';
+import { logger } from '../lib/logger.js';
 
 export interface TokenPair {
   accessToken: string;
   refreshToken: string;
+  refreshTokenExpiresAt: Date;
 }
 
 function hashToken(token: string): string {
@@ -36,13 +38,13 @@ async function issueTokens(user: AuthUser): Promise<TokenPair> {
     fechaExpiracion,
   });
 
-  return { accessToken, refreshToken };
+  return { accessToken, refreshToken, refreshTokenExpiresAt: fechaExpiracion };
 }
 
 export async function register(input: RegisterInput): Promise<TokenPair> {
   const existing = await usuarioRepository.consultarPorCorreo(input.email);
   if (existing) {
-    throw new ConflictError('El correo ya está registrado.');
+    throw new UnprocessableEntityError('El correo ya está registrado.');
   }
   const passwordHash = await bcrypt.hash(input.password, 12);
   const user = await usuarioRepository.crearCliente({
@@ -54,6 +56,9 @@ export async function register(input: RegisterInput): Promise<TokenPair> {
 }
 
 export async function login(input: LoginInput): Promise<TokenPair> {
+
+  logger.info(`Iniciando sesión para usuario: ${input.email}`)
+
   const user = await usuarioRepository.consultarPorCorreo(input.email);
   if (!user || !user.activo) {
     throw new UnauthorizedError('Credenciales inválidas.');
@@ -87,4 +92,11 @@ export async function refresh(refreshToken: string): Promise<TokenPair> {
   }
 
   return issueTokens(user);
+}
+
+export async function logout(refreshToken: string | undefined): Promise<void> {
+  if (!refreshToken) {
+    return;
+  }
+  await tokenSesionRepository.revocarTokenSesion(hashToken(refreshToken));
 }

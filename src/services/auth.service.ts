@@ -72,6 +72,7 @@ export async function login(input: LoginInput): Promise<TokenPair> {
 
 export async function refresh(refreshToken: string): Promise<TokenPair> {
   try {
+    logger.info('Refrescando Token')
     jwt.verify(refreshToken, env.JWT_REFRESH_SECRET);
   } catch {
     throw new UnauthorizedError('Refresh token inválido o expirado.');
@@ -86,6 +87,7 @@ export async function refresh(refreshToken: string): Promise<TokenPair> {
   // Rotación: revocar el token actual antes de emitir uno nuevo.
   await tokenSesionRepository.revocarTokenSesion(tokenHash);
 
+  logger.info('Expirando sesion')
   const user = await usuarioRepository.consultarPorID(session.idUsuario);
   if (!user || !user.activo) {
     throw new UnauthorizedError('Usuario inactivo.');
@@ -98,5 +100,6 @@ export async function logout(refreshToken: string | undefined): Promise<void> {
   if (!refreshToken) {
     return;
   }
+  logger.info('Cerrando sesion')
   await tokenSesionRepository.revocarTokenSesion(hashToken(refreshToken));
 }

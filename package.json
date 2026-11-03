@@ -4,7 +4,7 @@
   "description": "Backend de ShopCart — plataforma web de ventas (Node.js + TypeScript + Express + SQL Server)",
   "type": "module",
   "engines": {
-    "node": ">=24"
+    "node": ">=26"
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",

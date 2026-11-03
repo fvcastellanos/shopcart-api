@@ -1,0 +1,24 @@
+# Dependencias y build (se regeneran dentro del contenedor)
+node_modules
+dist
+
+# Control de versiones
+.git
+.gitignore
+
+# Entorno / secretos (nunca enviar al contexto de build)
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# SO / editores
+.DS_Store
+.idea
+.vscode
+
+# Utilidades de desarrollo local
+http-files

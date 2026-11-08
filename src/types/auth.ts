@@ -7,4 +7,5 @@ export interface AuthUser {
   id: number;
   email: string;
   rol: Role;
+  name?: string;
 }

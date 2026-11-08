@@ -19,7 +19,12 @@ interface UsuarioDbRow {
 }
 
 function mapAuthUser(row: UsuarioDbRow): AuthUser {
-  return { id: row.IDUsuario, email: row.Correo, rol: row.Rol as Role };
+  return { 
+    id: row.IDUsuario, 
+    email: row.Correo, 
+    rol: row.Rol as Role, 
+    name: row.Nombre 
+  };
 }
 
 function mapAuthUserRow(row: UsuarioDbRow): AuthUserRow {

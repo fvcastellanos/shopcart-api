@@ -20,7 +20,8 @@ function hashToken(token: string): string {
 }
 
 async function issueTokens(user: AuthUser): Promise<TokenPair> {
-  const payload = { id: user.id, email: user.email, rol: user.rol };
+  const payload = { id: user.id, email: user.email, rol: user.rol, name: user.name };
+  logger.info({payload});
   const accessToken = jwt.sign(payload, env.JWT_ACCESS_SECRET, {
     expiresIn: env.JWT_ACCESS_TTL,
   } as jwt.SignOptions);
@@ -102,4 +103,19 @@ export async function logout(refreshToken: string | undefined): Promise<void> {
   }
   logger.info('Cerrando sesion')
   await tokenSesionRepository.revocarTokenSesion(hashToken(refreshToken));
+}
+
+export async function obtenerPerfil(email: string): Promise<AuthUser> {
+
+  logger.info(`Consultando perfil correo: ${email}`);
+
+  const userRow = await usuarioRepository.consultarPorCorreo(email);
+
+  return {
+    id: userRow ? userRow.id: 0,
+    email: userRow ? userRow.email : "",
+    name: userRow ? userRow.name : "",
+    rol: userRow ? userRow.rol : "Cliente"
+  };
+
 }

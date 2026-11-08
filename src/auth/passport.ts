@@ -11,14 +11,14 @@ const options: StrategyOptions = {
 
 passport.use(
   new JwtStrategy(options, (payload, done) => {
-    // El token se firma en services/auth.service.ts con { id, email, rol }.
+    // El token se firma en services/auth.service.ts con { id, email, rol, nombre }.
     const user: AuthUser = {
       id: payload.id as number,
       email: payload.email as string,
       rol: payload.rol as Role,
+      name: payload.name as string
     };
-    // TODO (opcional): validar contra BD que el usuario siga activo
-    // (SP_Usuarios_ConsultarActivo) antes de aceptar el token.
+    
     return done(null, user);
   }),
 );

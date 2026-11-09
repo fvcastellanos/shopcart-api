@@ -177,6 +177,7 @@ npm run db:clean     # elimina los objetos del esquema (solo DB_SCHEMA)
 | `V013` | SP de asociación de atributos a variantes (agregar, modificar, quitar) |
 | `V014` | Índice único filtrado para `Token` de `Carrito` (permite múltiples NULL) |
 | `V015` | Devoluciones solo para pedidos `Entregado` |
+| `V016` | Cancelación de pedidos reflejada en kardex (reintegro de existencia) |
 
 **Total de objetos:** 20 tablas · 66 Stored Procedures · 1 función · 3 vistas.
 

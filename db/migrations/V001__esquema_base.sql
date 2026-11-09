@@ -261,7 +261,7 @@ CREATE TABLE $(SCHEMA).Bitacora (
     ValorAnterior NVARCHAR(MAX)     NULL,
     ValorNuevo    NVARCHAR(MAX)     NULL,
     Fecha         DATETIME2         NOT NULL CONSTRAINT DF_Bitacora_Fecha DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT CHK_Bitacora_Accion CHECK (Accion IN ('Crear', 'Modificar', 'Desactivar'))
+    CONSTRAINT CHK_Bitacora_Accion CHECK (Accion IN ('Crear', 'Modificar', 'Desactivar', 'AgregarAtributo', 'ModificarAtributo', 'QuitarAtributo'))
 );
 CREATE INDEX IX_Bitacora_Entidad ON $(SCHEMA).Bitacora (Entidad);
 CREATE INDEX IX_Bitacora_Usuario ON $(SCHEMA).Bitacora (IDUsuario);

@@ -66,6 +66,11 @@ const options: swaggerJsdoc.Options = {
           required: ['nombre'],
           properties: { nombre: { type: 'string' } },
         },
+        AtributoRequest: {
+          type: 'object',
+          required: ['nombre'],
+          properties: { nombre: { type: 'string' } },
+        },
         ProductoRequest: {
           type: 'object',
           required: ['nombre', 'idCategoria'],
@@ -73,6 +78,14 @@ const options: swaggerJsdoc.Options = {
             nombre: { type: 'string' },
             descripcion: { type: 'string' },
             idCategoria: { type: 'integer' },
+          },
+        },
+        VarianteAtributoRequest: {
+          type: 'object',
+          required: ['idAtributo', 'valor'],
+          properties: {
+            idAtributo: { type: 'integer' },
+            valor: { type: 'string' },
           },
         },
         VarianteRequest: {
@@ -83,10 +96,6 @@ const options: swaggerJsdoc.Options = {
             sku: { type: 'string' },
             precio: { type: 'number' },
             existencia: { type: 'integer' },
-            atributos: {
-              type: 'array',
-              items: { $ref: '#/components/schemas/AtributoDto' },
-            },
           },
         },
         CuponRequest: {
@@ -152,14 +161,23 @@ const options: swaggerJsdoc.Options = {
             accessToken: { type: 'string' },
           },
         },
-        AtributoDto: {
+        VarianteAtributoDto: {
           type: 'object',
           properties: {
+            idAtributo: { type: 'integer' },
             nombre: { type: 'string' },
             valor: { type: 'string' },
           },
         },
         CategoriaDto: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            nombre: { type: 'string' },
+            activo: { type: 'boolean' },
+          },
+        },
+        AtributoDto: {
           type: 'object',
           properties: {
             id: { type: 'integer' },
@@ -192,7 +210,7 @@ const options: swaggerJsdoc.Options = {
             precio: { type: 'number' },
             existencia: { type: 'integer' },
             activo: { type: 'boolean' },
-            atributos: { type: 'array', items: { $ref: '#/components/schemas/AtributoDto' } },
+            atributos: { type: 'array', items: { $ref: '#/components/schemas/VarianteAtributoDto' } },
           },
         },
         ExistenciaDto: {

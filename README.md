@@ -173,8 +173,10 @@ npm run db:clean     # elimina los objetos del esquema (solo DB_SCHEMA)
 | `V009` | SP de pedidos y devoluciones (RF-07) |
 | `V010` | Vistas `VW_Dashboard_*` + SP de reportes (RF-08) |
 | `V011` | SP de bitácora (RF-09) |
+| `V012` | Tabla `Atributo` + SP de atributos; `VarianteAtributo` referencia `Atributo` |
+| `V013` | SP de asociación de atributos a variantes (agregar, modificar, quitar) |
 
-**Total de objetos:** 19 tablas · 59 Stored Procedures · 1 función · 3 vistas.
+**Total de objetos:** 20 tablas · 66 Stored Procedures · 1 función · 3 vistas.
 
 ---
 
@@ -198,7 +200,8 @@ Todas las rutas están prefijadas con `/v1`.
 | `/auth` | `POST /register`, `POST /login`, `POST /refresh`, `POST /logout` | público |
 | `/categorias` | GET (lista), POST, `PUT /:id`, `DELETE /:id` | lectura pública · escritura Admin |
 | `/productos` | GET (búsqueda/filtros), `GET /:id`, POST, `PUT /:id`, `DELETE /:id` | lectura pública · escritura Admin |
-| `/variantes` | POST, `PUT /:id`, `DELETE /:id` | Admin |
+| `/variantes` | POST, `PUT /:id`, `DELETE /:id`, `POST /:id/atributos`, `PUT /:id/atributos/:idAtributo`, `DELETE /:id/atributos/:idAtributo` | Admin |
+| `/atributos` | GET (lista), POST, `PUT /:id`, `DELETE /:id` | lectura pública · escritura Admin |
 | `/inventario` | `GET /:id/existencia`, `GET /:id/kardex`, `POST /:id/entradas`, `POST /:id/ajustes` | Operador/Admin |
 | `/carrito` | POST, `GET /:id`, `POST /:id/items`, `PUT /:id/items/:idVariante`, `DELETE /:id/items/:idVariante`, `DELETE /:id/items` | invitado o autenticado |
 | `/cupones` | GET (lista), `GET /codigo/:codigo`, POST, `PUT /:id`, `DELETE /:id` | Admin |

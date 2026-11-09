@@ -1,7 +1,8 @@
 import sql from 'mssql';
 import { executeProcedure } from './sp.js';
 
-export interface AtributoDto {
+export interface VarianteAtributoDto {
+  idAtributo: number;
   nombre: string;
   valor: string;
 }
@@ -13,7 +14,7 @@ export interface VarianteDto {
   precio: number;
   existencia: number;
   activo: boolean;
-  atributos: AtributoDto[];
+  atributos: VarianteAtributoDto[];
 }
 
 interface VarianteDbRow {
@@ -33,7 +34,7 @@ const mapVariante = (r: VarianteDbRow): VarianteDto => ({
   precio: r.Precio,
   existencia: r.Existencia,
   activo: Boolean(r.Activo),
-  atributos: r.Atributos ? (JSON.parse(r.Atributos) as AtributoDto[]) : [],
+  atributos: r.Atributos ? (JSON.parse(r.Atributos) as VarianteAtributoDto[]) : [],
 });
 
 export async function listarVariantes(idProducto: number): Promise<VarianteDto[]> {
@@ -49,17 +50,14 @@ export async function crearVariante(
     sku: string;
     precio: number;
     existencia: number;
-    atributos?: { nombre: string; valor: string }[];
   },
   idUsuario: number,
 ): Promise<VarianteDto> {
-  const atributosJson = input.atributos?.length ? JSON.stringify(input.atributos) : null;
   const rows = await executeProcedure<VarianteDbRow[]>('SP_Catalogo_CrearVariante', [
     { name: 'IDProducto', value: input.idProducto, type: sql.Int },
     { name: 'SKU', value: input.sku },
     { name: 'Precio', value: input.precio, type: sql.Decimal(10, 2) },
     { name: 'Existencia', value: input.existencia, type: sql.Int },
-    { name: 'Atributos', value: atributosJson, type: sql.NVarChar(sql.MAX) },
     { name: 'IDUsuario', value: idUsuario, type: sql.Int },
   ]);
   return mapVariante(rows[0]);
@@ -83,6 +81,48 @@ export async function modificarVariante(
 export async function desactivarVariante(id: number, idUsuario: number): Promise<void> {
   await executeProcedure('SP_Catalogo_DesactivarVariante', [
     { name: 'IDVariante', value: id, type: sql.Int },
+    { name: 'IDUsuario', value: idUsuario, type: sql.Int },
+  ]);
+}
+
+export async function agregarAtributoVariante(
+  idVariante: number,
+  idAtributo: number,
+  valor: string,
+  idUsuario: number,
+): Promise<VarianteDto> {
+  const rows = await executeProcedure<VarianteDbRow[]>('SP_Catalogo_AgregarAtributoVariante', [
+    { name: 'IDVariante', value: idVariante, type: sql.Int },
+    { name: 'IDAtributo', value: idAtributo, type: sql.Int },
+    { name: 'Valor', value: valor },
+    { name: 'IDUsuario', value: idUsuario, type: sql.Int },
+  ]);
+  return mapVariante(rows[0]);
+}
+
+export async function modificarAtributoVariante(
+  idVariante: number,
+  idAtributo: number,
+  valor: string,
+  idUsuario: number,
+): Promise<VarianteDto> {
+  const rows = await executeProcedure<VarianteDbRow[]>('SP_Catalogo_ModificarAtributoVariante', [
+    { name: 'IDVariante', value: idVariante, type: sql.Int },
+    { name: 'IDAtributo', value: idAtributo, type: sql.Int },
+    { name: 'Valor', value: valor },
+    { name: 'IDUsuario', value: idUsuario, type: sql.Int },
+  ]);
+  return mapVariante(rows[0]);
+}
+
+export async function quitarAtributoVariante(
+  idVariante: number,
+  idAtributo: number,
+  idUsuario: number,
+): Promise<void> {
+  await executeProcedure('SP_Catalogo_QuitarAtributoVariante', [
+    { name: 'IDVariante', value: idVariante, type: sql.Int },
+    { name: 'IDAtributo', value: idAtributo, type: sql.Int },
     { name: 'IDUsuario', value: idUsuario, type: sql.Int },
   ]);
 }

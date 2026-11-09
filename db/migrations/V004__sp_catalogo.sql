@@ -271,7 +271,7 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT v.IDVariante, v.IDProducto, v.SKU, v.Precio, v.Existencia, v.Activo,
-           (SELECT va.Nombre, va.Valor
+           (SELECT va.Nombre as nombre, va.Valor as valor
             FROM $(SCHEMA).VarianteAtributo va
             WHERE va.IDVariante = v.IDVariante
             FOR JSON PATH) AS Atributos
@@ -288,7 +288,7 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT v.IDVariante, v.IDProducto, v.SKU, v.Precio, v.Existencia, v.Activo,
-           (SELECT va.Nombre, va.Valor
+           (SELECT va.Nombre as nombre, va.Valor as valor
             FROM $(SCHEMA).VarianteAtributo va
             WHERE va.IDVariante = v.IDVariante
             FOR JSON PATH) AS Atributos
@@ -302,7 +302,7 @@ CREATE PROCEDURE $(SCHEMA).SP_Catalogo_CrearVariante
     @SKU        NVARCHAR(50),
     @Precio     DECIMAL(10,2),
     @Existencia INT,
-    @Atributos  NVARCHAR(MAX) = NULL,  -- JSON: [{"Nombre":"Talla","Valor":"M"}]
+    @Atributos  NVARCHAR(MAX) = NULL,  -- JSON: [{"nombre":"Talla","valor":"M"}]
     @IDUsuario  INT
 AS
 BEGIN

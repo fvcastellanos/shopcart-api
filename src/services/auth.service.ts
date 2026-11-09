@@ -21,7 +21,7 @@ function hashToken(token: string): string {
 
 async function issueTokens(user: AuthUser): Promise<TokenPair> {
   const payload = { id: user.id, email: user.email, rol: user.rol, name: user.name };
-  logger.info({payload});
+  logger.info({ idUsuario: user.id, rol: user.rol }, 'Tokens emitidos');
   const accessToken = jwt.sign(payload, env.JWT_ACCESS_SECRET, {
     expiresIn: env.JWT_ACCESS_TTL,
   } as jwt.SignOptions);
@@ -57,9 +57,6 @@ export async function register(input: RegisterInput): Promise<TokenPair> {
 }
 
 export async function login(input: LoginInput): Promise<TokenPair> {
-
-  logger.info(`Iniciando sesión para usuario: ${input.email}`)
-
   const user = await usuarioRepository.consultarPorCorreo(input.email);
   if (!user || !user.activo) {
     throw new UnauthorizedError('Credenciales inválidas.');
@@ -73,7 +70,7 @@ export async function login(input: LoginInput): Promise<TokenPair> {
 
 export async function refresh(refreshToken: string): Promise<TokenPair> {
   try {
-    logger.info('Refrescando Token')
+    logger.info('Refrescando token');
     jwt.verify(refreshToken, env.JWT_REFRESH_SECRET);
   } catch {
     throw new UnauthorizedError('Refresh token inválido o expirado.');
@@ -88,7 +85,7 @@ export async function refresh(refreshToken: string): Promise<TokenPair> {
   // Rotación: revocar el token actual antes de emitir uno nuevo.
   await tokenSesionRepository.revocarTokenSesion(tokenHash);
 
-  logger.info('Expirando sesion')
+  logger.info('Sesión revocada');
   const user = await usuarioRepository.consultarPorID(session.idUsuario);
   if (!user || !user.activo) {
     throw new UnauthorizedError('Usuario inactivo.');
@@ -101,21 +98,6 @@ export async function logout(refreshToken: string | undefined): Promise<void> {
   if (!refreshToken) {
     return;
   }
-  logger.info('Cerrando sesion')
+  logger.info('Cerrando sesión');
   await tokenSesionRepository.revocarTokenSesion(hashToken(refreshToken));
-}
-
-export async function obtenerPerfil(email: string): Promise<AuthUser> {
-
-  logger.info(`Consultando perfil correo: ${email}`);
-
-  const userRow = await usuarioRepository.consultarPorCorreo(email);
-
-  return {
-    id: userRow ? userRow.id: 0,
-    email: userRow ? userRow.email : "",
-    name: userRow ? userRow.name : "",
-    rol: userRow ? userRow.rol : "Cliente"
-  };
-
 }

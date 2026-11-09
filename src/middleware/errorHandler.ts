@@ -12,6 +12,8 @@ const SQL_ERROR_HTTP: Record<number, number> = {
   50014: 404, // categoría no encontrada
   50015: 404, // variante no encontrada
   50016: 404, // producto no encontrado
+  50017: 404, // atributo no encontrado
+  50023: 404, // atributo no asociado a la variante
   50034: 404, // producto no está en el carrito
   50040: 404, // carrito no encontrado
   50052: 404, // cupón no encontrado
@@ -23,6 +25,8 @@ const SQL_ERROR_HTTP: Record<number, number> = {
   50001: 422, // correo ya registrado
   50011: 422, // categoría duplicada
   50012: 422, // SKU duplicado
+  50018: 422, // atributo duplicado
+  50019: 422, // atributo ya asociado a la variante
   50020: 422, // cantidad debe ser mayor que cero
   50021: 422, // el ajuste exige un motivo
   50022: 422, // el ajuste no puede dejar existencia negativa

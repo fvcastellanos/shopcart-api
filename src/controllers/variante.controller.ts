@@ -20,3 +20,32 @@ export const desactivarVariante = asyncHandler(async (req: Request, res: Respons
   await varianteService.desactivarVariante(Number(req.params.id), req.user!.id);
   res.status(204).send();
 });
+
+export const agregarAtributoVariante = asyncHandler(async (req: Request, res: Response) => {
+  const variante = await varianteService.agregarAtributoVariante(
+    Number(req.params.id),
+    req.body.idAtributo,
+    req.body.valor,
+    req.user!.id,
+  );
+  res.status(201).json(variante);
+});
+
+export const modificarAtributoVariante = asyncHandler(async (req: Request, res: Response) => {
+  const variante = await varianteService.modificarAtributoVariante(
+    Number(req.params.id),
+    Number(req.params.idAtributo),
+    req.body.valor,
+    req.user!.id,
+  );
+  res.json(variante);
+});
+
+export const quitarAtributoVariante = asyncHandler(async (req: Request, res: Response) => {
+  await varianteService.quitarAtributoVariante(
+    Number(req.params.id),
+    Number(req.params.idAtributo),
+    req.user!.id,
+  );
+  res.status(204).send();
+});

@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { actuatorRouter } from './actuator.routes.js';
+import { atributoRouter } from './atributo.routes.js';
 import { authRouter } from './auth.routes.js';
 import { categoriaRouter } from './categoria.routes.js';
 import { productoRouter } from './producto.routes.js';
@@ -20,6 +21,7 @@ apiRouter.use('/auth', authRouter);
 apiRouter.use('/categorias', categoriaRouter);
 apiRouter.use('/productos', productoRouter);
 apiRouter.use('/variantes', varianteRouter);
+apiRouter.use('/atributos', atributoRouter);
 apiRouter.use('/inventario', inventarioRouter);
 apiRouter.use('/carrito', carritoRouter);
 apiRouter.use('/cupones', cuponRouter);

@@ -4,13 +4,19 @@ import { authenticate } from '../middleware/authenticate.js';
 import { authorize } from '../middleware/authorize.js';
 import { validate } from '../middleware/validate.js';
 import { idParamSchema } from '../schemas/common.schema.js';
-import { crearVarianteSchema, modificarVarianteSchema } from '../schemas/variante.schema.js';
+import {
+  agregarAtributoVarianteSchema,
+  crearVarianteSchema,
+  modificarAtributoVarianteSchema,
+  modificarVarianteSchema,
+  varianteAtributoParamsSchema,
+} from '../schemas/variante.schema.js';
 
 /**
  * @swagger
  * /variantes:
  *   post:
- *     summary: Crea una variante (con atributos)
+ *     summary: Crea una variante
  *     tags: [Catálogo]
  *     security: [{ bearerAuth: [] }]
  *     requestBody:
@@ -57,6 +63,56 @@ import { crearVarianteSchema, modificarVarianteSchema } from '../schemas/variant
  *       - { in: path, name: id, required: true, schema: { type: integer } }
  *     responses:
  *       204: { description: Variante desactivada }
+ * /variantes/{id}/atributos:
+ *   post:
+ *     summary: Agrega un atributo a una variante
+ *     tags: [Catálogo]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - { in: path, name: id, required: true, schema: { type: integer } }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema: { $ref: '#/components/schemas/VarianteAtributoRequest' }
+ *     responses:
+ *       201:
+ *         description: Atributo agregado
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/VarianteDto' }
+ * /variantes/{id}/atributos/{idAtributo}:
+ *   put:
+ *     summary: Modifica el valor de un atributo de una variante
+ *     tags: [Catálogo]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - { in: path, name: id, required: true, schema: { type: integer } }
+ *       - { in: path, name: idAtributo, required: true, schema: { type: integer } }
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [valor]
+ *             properties:
+ *               valor: { type: string }
+ *     responses:
+ *       200:
+ *         description: Atributo modificado
+ *         content:
+ *           application/json:
+ *             schema: { $ref: '#/components/schemas/VarianteDto' }
+ *   delete:
+ *     summary: Quita un atributo de una variante
+ *     tags: [Catálogo]
+ *     security: [{ bearerAuth: [] }]
+ *     parameters:
+ *       - { in: path, name: id, required: true, schema: { type: integer } }
+ *       - { in: path, name: idAtributo, required: true, schema: { type: integer } }
+ *     responses:
+ *       204: { description: Atributo quitado }
  */
 export const varianteRouter = Router();
 
@@ -80,4 +136,24 @@ varianteRouter.delete(
   ...admin,
   validate({ params: idParamSchema }),
   varianteController.desactivarVariante,
+);
+
+// Asociación de atributos a variantes (Administrador)
+varianteRouter.post(
+  '/:id/atributos',
+  ...admin,
+  validate({ params: idParamSchema, body: agregarAtributoVarianteSchema }),
+  varianteController.agregarAtributoVariante,
+);
+varianteRouter.put(
+  '/:id/atributos/:idAtributo',
+  ...admin,
+  validate({ params: varianteAtributoParamsSchema, body: modificarAtributoVarianteSchema }),
+  varianteController.modificarAtributoVariante,
+);
+varianteRouter.delete(
+  '/:id/atributos/:idAtributo',
+  ...admin,
+  validate({ params: varianteAtributoParamsSchema }),
+  varianteController.quitarAtributoVariante,
 );

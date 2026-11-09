@@ -47,7 +47,7 @@ const SQL_ERROR_HTTP: Record<number, number> = {
   50059: 422, // límite de usos alcanzado
   50060: 422, // existencia insuficiente para reservar
   50071: 422, // transición de estado no permitida
-  50072: 422, // no se puede devolver un pedido cancelado
+  50072: 422, // solo se puede devolver un pedido entregado
   50074: 422, // no se puede devolver más de lo vendido
   50003: 422, // rol 'Cliente' no existe
 };

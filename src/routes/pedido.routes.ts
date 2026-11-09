@@ -146,7 +146,7 @@ import {
  */
 export const pedidoRouter = Router();
 
-const equipo = [authenticate, authorize('Operador', 'Administrador')];
+const equipo = [authenticate, authorize('Operador', 'Cliente', 'Administrador')];
 
 pedidoRouter.post('/', authenticate, validate({ body: crearPedidoSchema }), pedidoController.crearPedido);
 pedidoRouter.get('/mios', authenticate, pedidoController.listarMios);

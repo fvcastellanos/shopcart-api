@@ -175,6 +175,8 @@ npm run db:clean     # elimina los objetos del esquema (solo DB_SCHEMA)
 | `V011` | SP de bitácora (RF-09) |
 | `V012` | Tabla `Atributo` + SP de atributos; `VarianteAtributo` referencia `Atributo` |
 | `V013` | SP de asociación de atributos a variantes (agregar, modificar, quitar) |
+| `V014` | Índice único filtrado para `Token` de `Carrito` (permite múltiples NULL) |
+| `V015` | Devoluciones solo para pedidos `Entregado` |
 
 **Total de objetos:** 20 tablas · 66 Stored Procedures · 1 función · 3 vistas.
 

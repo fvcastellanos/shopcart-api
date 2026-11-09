@@ -1,10 +1,14 @@
 import type { Request, Response } from 'express';
 import { asyncHandler } from '../lib/asyncHandler.js';
 import * as carritoService from '../services/carrito.service.js';
+import { logger } from '../lib/logger.js';
 
 export const crear = asyncHandler(async (req: Request, res: Response) => {
   const idUsuario = req.user?.id ?? null;
   const token = req.body.token ?? null;
+
+  logger.info(`Creando carrito para usuario: ${idUsuario} - token: ${token}`)
+
   const carrito = await carritoService.crear(idUsuario, token);
   res.status(201).json(carrito);
 });

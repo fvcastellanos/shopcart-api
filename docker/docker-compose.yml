@@ -1,0 +1,33 @@
+# Docker Compose para ShopCart API (solo este proyecto).
+#
+# Uso (desde la raíz del proyecto):
+#   docker compose -f docker/docker-compose.yml up --build
+#   curl http://localhost:4000/v1/actuator/health
+#
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      # NODE_ENV=test: confía en el certificado autofirmado de SQL Server y
+      # evita pino-pretty (que no va en la imagen de producción).
+      NODE_ENV: ${NODE_ENV:-test}
+      PORT: "4000"
+      # Apunta a SQL Server externo. En macOS/Windows usa host.docker.internal
+      # para llegar a un SQL Server que corre en tu máquina.
+      DB_HOST: ${DB_HOST:-host.docker.internal}
+      DB_PORT: ${DB_PORT:-1433}
+      DB_NAME: ${DB_NAME:-ShopCart}
+      DB_SCHEMA: ${DB_SCHEMA:-shopcart}
+      DB_USER: ${DB_USER:-sa}
+      DB_PASSWORD: ${DB_PASSWORD:-Your_Password123!}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-change_me_access_secret_min_32_chars}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change_me_refresh_secret_min_32_chars}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:-15m}
+      JWT_REFRESH_TTL: ${JWT_REFRESH_TTL:-7d}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+    restart: unless-stopped

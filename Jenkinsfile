@@ -27,16 +27,16 @@ node {
             stage('Run Tests') {
                 docker.image(nodeImageName)
                         .inside {
-                            sh 'npm run test'
+                            sh """
+                              npm i
+                              npm run test
+                            """
                         }
             }
 
             stage('Build Docker Image') {
                 sh """
-                    docker build \\
-                        -f ${dockerfilePath} \\
-                        -t ${imageName} \\                        
-                        .
+                    docker build -f ${dockerfilePath} -t ${imageName} .
                 """
             }
 
